@@ -1,7 +1,9 @@
 import express from 'express';
+import "dotenv/config";
 import { productRouter } from './api/product.js';
 import { categoryRouter } from './api/category.js';
 import globalErrorHandlingMiddleware from "./api/middleware/global-error-handling-middleware.js";
+import { connectDB } from './infrastructure/db.js';
 const app = express();
 
 const port = 3000;
@@ -26,5 +28,5 @@ app.delete('/products/:id',deleteProduct); // delete a specific product by id
 
 app.patch('/products/:id',updateProduct);
 */
-
+connectDB(); // establish the connecttion to mongodb
 app.listen(port, () => console.log(`Server running on port ${port}`));

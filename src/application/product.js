@@ -1,5 +1,6 @@
 import NotFoundError from '../domain/errors/not-found-error.js';
-const products = [
+import Product from '../infrastructure/schema/Product.js';
+/*const products = [
     {
       categoryId: "1",
       image: "/assets/products/airpods-max.png",
@@ -73,27 +74,35 @@ const products = [
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, sequi?",
     },
   ];
-  export const getProducts = (req, res, next) => {
+*/
+  export const getProducts = async(req, res, next) => {
     try {
-      return res.status(200).json(products).send();
+      const { categoryId } = req.query; // gets the specific id from the url
+      if (!categoryId) {
+        const data = await Product.find();
+        return res.status(200).json(data).send();
+      }
+  
+      const data = await Product.find({ categoryId });
+      return res.status(200).json(data).send();
     } catch (error) {
       next(error);
     }
   };
 
-  export const createProduct = (req, res, next) => {
+  export const createProduct = async (req, res, next) => {
     try {
-      products.push(req.body);
+      await Product.create(req.body);
       return res.status(201).send();
     } catch (error) {
       next(error);
     }
   };
   
-  export const getProduct = (req, res, next) => {
+  export const getProduct = async (req, res, next) => {
     try {
       const id = req.params.id;
-      const product = products.find((pro) => pro.id === id);
+      const product = await Product.findById(id).populate("categoryId");
       if (!product) {
         throw new NotFoundError("Product not found");
       }
@@ -104,41 +113,28 @@ const products = [
     }
   };
   
-  export const deleteProduct = (req, res, next) => {
+  export const deleteProduct = async (req, res, next) => {
     try {
       const id = req.params.id;
-      const index = products.findIndex((pro) => pro.id == id);
+      const product = await Product.findByIdAndDelete(id);
   
-      if (index === -1) {
+      if (!product) {
         throw new NotFoundError("Product not found");
       }
-      products.splice(index, 1);
       return res.status(204).send();
     } catch (error) {
       next(error);
     }
   };
-export const updateProduct = (req, res,next) => {
+export const updateProduct = async (req, res,next) => {
   try {
      const id = req.params.id;
-    const productIndex = products.findIndex((pro) => pro.id == id);
-    if (index === -1) {
+    const product= await Product.findByIdAndUpdate(id,req.body);
+    if (!product) {
       throw new NotFoundError("Product not found");
     }
-    const existingProduct = products[productIndex];
+  res.status(200).send(product);
 
-  console.log(existingProduct); 
-  const updatedProduct = { ...existingProduct, ...req.body }; // ...req.body :- { price: '479.00', description: 'Lorem ipsum' }
-  products[productIndex] = updatedProduct;
- 
-  res.status(200).send(updatedProduct);
-  /* The spread operator (...) is a shortcut in JavaScript that allows you to:
-      Copy arrays or objects.
-      Combine arrays or objects.
-      Update existing arrays or objects.
-      It spreads out the values inside an array or object.
-     
-*/
   } catch (error) {
     next(error);
   }

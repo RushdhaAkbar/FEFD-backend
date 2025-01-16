@@ -1,6 +1,8 @@
 import NotFoundError from "../domain/errors/not-found-error.js";
+import Category from "../infrastructure/schema/Category.js";
 
-const categories = [
+
+/*const categories = [
     { _id: "ALL", name: "All" },
     { _id: "1", name: "Headphones" },
     { _id: "2", name: "Earbuds" },
@@ -8,17 +10,19 @@ const categories = [
     { _id: "4", name: "Mobile Phones" },
     { _id: "5", name: "Smart Watches" },
   ];
-  export const getCategories = (req, res, next) => {
+  */
+  export const getCategories = async (req, res, next) => {
       try {
-        return res.status(200).json(categories).send();
+        const data = await Category.find();
+        return res.status(200).json(data).send();
       } catch (error) {
         next(error);
       }
     };
 
-  export const createCategory =(req,res,next)=>{
+  export const createCategory =async (req,res,next)=>{
     try {
-        categories.push(req.body);
+        await Category.create(req.body);
         return res.status(201).send();
         
     } catch (error) {
@@ -26,10 +30,10 @@ const categories = [
     }
   }  
 
-  export const getCategory =(req,res,next) =>{
+  export const getCategory =async(req,res,next) =>{
     try {
         const id = req.params.id;
-        const category = categories.find((cat) => cat._id == id);
+        const category = await Category.findById(id);
         if(!category){
             throw new NotFoundError("Category Not Found");
         }
@@ -39,34 +43,28 @@ const categories = [
     }
   }
 
-  export const deleteCategory = (req,res,next)=>{
+  export const deleteCategory = async(req,res,next)=>{
     try {
          const id = req.params.id;
-         const index = categories.findIndex((cat)=>cat._id=id);
+         const category = await Category.findByIdAndDelete(id);
 
-         if(index === -1){
+         if(category){
             throw new NotFoundError("Category Not Found");
          }
-         categories.splice(index,1);
          return res.status(204).send();
     } catch (error) {
         next(error)
     }
   }
 
-  export const updateCategory =(req,res,next) =>{
+  export const updateCategory =async(req,res,next) =>{
     try{
         const id = req.params.id;
-        const index= categories.findIndex((cat)=>cat._id==id);
-        if (index === -1) {
+        const category = await Category.findByIdAndUpdate(id,req.body);
+        if (category) {
             throw new NotFoundError("Category not found");
           }
-        
-          const existingCategory = categories[index];
-          const updatedCategory = {...existingCategory,...req.body};
-          categories[index] = updatedCategory;
-
-          return res.status(200).json(updatedCategory).send();
+        return res.status(200).json(category).send();
     } catch (error) {
         next(error);
     }
