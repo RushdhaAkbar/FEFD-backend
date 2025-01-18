@@ -4,6 +4,7 @@ import { productRouter } from './api/product.js';
 import { categoryRouter } from './api/category.js';
 import globalErrorHandlingMiddleware from "./api/middleware/global-error-handling-middleware.js";
 import { connectDB } from './infrastructure/db.js';
+import cors from "cors";
 const app = express();
 
 const port = 3000;
@@ -15,7 +16,7 @@ app.use(express.json()); // For parsing JSON requests*
 //   next();
 // });
 
-
+app.use(cors({ origin: "http://localhost:5173" }));
 
 
 app.use('/api/products',productRouter) // base routes and all the requests associated with it
