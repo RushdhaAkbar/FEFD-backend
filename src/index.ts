@@ -1,9 +1,9 @@
 import express from 'express';
 import "dotenv/config";
-import { productRouter } from './api/product.js';
-import { categoryRouter } from './api/category.js';
-import globalErrorHandlingMiddleware from "./api/middleware/global-error-handling-middleware.js";
-import { connectDB } from './infrastructure/db.js';
+import { productRouter } from './api/product';
+import { categoryRouter } from './api/category';
+import globalErrorHandlingMiddleware from "./api/middleware/global-error-handling-middleware";
+import { connectDB } from './infrastructure/db';
 import cors from "cors";
 const app = express();
 
@@ -21,7 +21,7 @@ app.use(cors({ origin: "http://localhost:5173" }));
 
 app.use('/api/products',productRouter) // base routes and all the requests associated with it
 app.use('/api/categories',categoryRouter);
-app.use(globalErrorHandlingMiddleware)
+app.use(globalErrorHandlingMiddleware);
 /*
 app.get('/products/4',getProduct); //http://localhost:3000/products/4
 app.get('/products/:id',getProduct); //to have a dynamic routing we can use http://localhost:3000/products/4

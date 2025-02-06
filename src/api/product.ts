@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProducts,createProduct,getProduct,deleteProduct,updateProduct } from '../application/product.js'; // make sure to add .js when importing
+import { getProducts,createProduct,getProduct,deleteProduct,updateProduct } from '../application/product'; // make sure to add .js when importing in js file but ts doesnt need it
 /*
 app.get('/products', getProducts);
 app.post('/products',createProduct);
