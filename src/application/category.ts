@@ -20,7 +20,7 @@ import { Request, Response, NextFunction } from "express";
   ) => {
     try {
       const data = await Category.find();
-      res.status(200).json(data).send();
+      res.status(200).json(data);
       return;
     } catch (error) {
       next(error);
@@ -59,7 +59,7 @@ import { Request, Response, NextFunction } from "express";
         throw new NotFoundError("Product not found");
       }
   
-      res.status(200).json(category).send();
+      res.status(200).json(category);
       return;
     } catch (error) {
       next(error);
@@ -78,7 +78,7 @@ import { Request, Response, NextFunction } from "express";
       if (!category) {
         throw new NotFoundError("Product not found");
       }
-      res.status(204).send();
+      res.status(204);
       return;
     } catch (error) {
       next(error);

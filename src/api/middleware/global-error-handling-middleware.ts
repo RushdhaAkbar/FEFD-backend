@@ -13,7 +13,7 @@ const globalErrorHandlingMiddleware = (
       .json({
         message: error.message,
       })
-      .send();
+      
     return;
   } else if (error.name === "ValidationError") {
     res
@@ -21,7 +21,7 @@ const globalErrorHandlingMiddleware = (
       .json({
         message: error.message,
       })
-      .send();
+      
     return;
   } else {
     res
@@ -29,7 +29,7 @@ const globalErrorHandlingMiddleware = (
       .json({
         message: error.message,
       })
-      .send();
+      
     return;
   }
 };

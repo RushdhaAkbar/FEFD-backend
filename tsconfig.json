@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-      "sourceMap": true, // ts file will be converted to a js file
-      "outDir": "dist", // converted js will be stored in this folder which is hidden
-      "strict": true, // very strict with null values and undefined in ts
-      "lib": ["esnext"], 
+      "sourceMap": true,
+      "outDir": "dist",
+      "strict": true,
+      "lib": ["esnext"],
       "esModuleInterop": true
     }
   }
