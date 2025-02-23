@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import ValidationError from "../domain/errors/validation-error";
 import Order from "../infrastructure/schema/Order";
-import { getAuth } from "@clerk/express";
 import NotFoundError from "../domain/errors/not-found-error";
 import Address from "../infrastructure/schema/Address";
 import { CreateOrderDTO } from "../domain/dto/order";
