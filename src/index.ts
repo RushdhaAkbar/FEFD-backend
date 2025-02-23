@@ -13,7 +13,7 @@ import {inventoryRouter} from './api/inventory';
 //console.log("Clerk API Key:", process.env.CLERK_SECRET_KEY);
 const app = express();
 
-const port = 3000;
+
 
 app.use(express.json()); // For parsing JSON requests*
 // app.use((req, res, next) => {
@@ -22,7 +22,7 @@ app.use(express.json()); // For parsing JSON requests*
 //   next();
 // });
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "http://https://fed-storefront-frontend-rushdha.netlify.app/" }));
 
 app.use(clerkMiddleware())
 app.use('/api/products',productRouter) // base routes and all the requests associated with it
@@ -39,4 +39,5 @@ app.delete('/products/:id',deleteProduct); // delete a specific product by id
 app.patch('/products/:id',updateProduct);
 */
 connectDB(); // establish the connecttion to mongodb
-app.listen(port, () => console.log(`Server running on port ${port}`));
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
