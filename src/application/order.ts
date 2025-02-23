@@ -18,7 +18,8 @@ export const createOrder = async (
       throw new ValidationError("Invalid order data");
     }
 
-    const userId = req.auth.userId;
+ const userId = (req as any).auth.userId;
+    ;
 
     const address = await Address.create({
       ...result.data.shippingAddress,
