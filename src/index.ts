@@ -22,7 +22,7 @@ app.use(express.json()); // For parsing JSON requests*
 //   next();
 // });
 
-app.use(cors({ origin: "http://https://fed-storefront-frontend-rushdha.netlify.app/" }));
+app.use(cors({ origin: "https://fed-storefront-frontend-rushdha.netlify.app/"}));
 
 app.use(clerkMiddleware())
 app.use('/api/products',productRouter) // base routes and all the requests associated with it
