@@ -5,29 +5,8 @@ import Order from "../infrastructure/schema/Order";
 import { getAuth } from "@clerk/express";
 import NotFoundError from "../domain/errors/not-found-error";
 import Address from "../infrastructure/schema/Address";
+import { CreateOrderDTO } from "../domain/dto/order";
 
-const orderSchema = z.object({
-  items: z
-    .object({
-      product: z.object({
-        _id: z.string(),
-        name: z.string(),
-        price: z.string(),
-        image: z.string(),
-        description: z.string(),
-      }),
-      quantity: z.number(),
-    })
-    .array(),
-  shippingAddress: z.object({
-    line_1: z.string(),
-    line_2: z.string(),
-    city: z.string(),
-    state: z.string(),
-    zip_code: z.string(),
-    phone: z.string(),
-  }),
-});
 
 export const createOrder = async (
   req: Request,
@@ -35,22 +14,19 @@ export const createOrder = async (
   next: NextFunction
 ) => {
   try {
-    const order = req.body;
-    console.log(order);
-    const result = orderSchema.safeParse(order);
+    const result = CreateOrderDTO.safeParse(req.body);
     if (!result.success) {
-      console.log(result.error);
       throw new ValidationError("Invalid order data");
     }
 
-    const userId = getAuth(req).userId;
-    
+    const userId = req.auth.userId;
+
     const address = await Address.create({
       ...result.data.shippingAddress,
     });
 
     await Order.create({
-      userId: "user_2sf56LmszyA84qWVOZKCBB68OQX",
+      userId,
       items: result.data.items,
       addressId: address._id,
     });
@@ -76,6 +52,33 @@ export const getOrder = async (
       throw new NotFoundError("Order not found");
     }
     res.status(200).json(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUserOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.userId;
+
+
+    const orders = await Order.find({ userId })
+      .populate({
+        path: "addressId",
+        model: "Address",
+      })
+      .exec();
+
+    if (!orders || orders.length === 0) {
+      throw new NotFoundError("No orders found for this user");
+    }
+
+    
+    res.status(200).json(orders);
   } catch (error) {
     next(error);
   }

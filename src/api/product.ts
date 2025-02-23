@@ -1,13 +1,22 @@
-import express from 'express';
-import { getProducts,createProduct,getProduct,deleteProduct,updateProduct } from '../application/product'; // make sure to add .js when importing in js file but ts doesnt need it
-/*
-app.get('/products', getProducts);
-app.post('/products',createProduct);
+import express from "express";
+import {
+  getProducts,
+  createProduct,
+  getProduct,
+  deleteProduct,
+  updateProduct,
+} from "../application/product";
+import { isAuthenticated } from "./middleware/authentication-middleware";
+import { isAdmin } from "./middleware/authorization-middleware";
 
-
-*/
-// Instead of having induvidual routes we can group the routes using the base route
 export const productRouter = express.Router();
-productRouter.route('/').get(getProducts).post(createProduct);
-//when additionally route is need define it seprately
-productRouter.route('/:id').get(getProduct).delete(deleteProduct).patch(updateProduct);
+
+productRouter
+  .route("/")
+  .get(getProducts)
+  .post(isAuthenticated, isAdmin, createProduct); //Remove isAuthenticated and isAdmin for using with Postman
+productRouter
+  .route("/:id")
+  .get(getProduct)
+  .delete(isAuthenticated, isAdmin, deleteProduct)
+  .patch(isAuthenticated, isAdmin, updateProduct);

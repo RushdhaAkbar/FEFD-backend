@@ -8,6 +8,7 @@ import { connectDB } from './infrastructure/db';
 import cors from "cors";
 import { orderRouter } from "./api/order";
 import { paymentsRouter } from './api/payment';
+import {inventoryRouter} from './api/inventory';
 //console.log("Clerk Publishable Key:", process.env.CLERK_PUBLISHABLE_KEY);
 //console.log("Clerk API Key:", process.env.CLERK_SECRET_KEY);
 const app = express();
@@ -28,6 +29,7 @@ app.use('/api/products',productRouter) // base routes and all the requests assoc
 app.use('/api/categories',categoryRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/payments",paymentsRouter);
+app.use("/api/inventories",inventoryRouter);
 app.use(globalErrorHandlingMiddleware);
 /*
 app.get('/products/4',getProduct); //http://localhost:3000/products/4
