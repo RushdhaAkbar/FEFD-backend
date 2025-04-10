@@ -4,32 +4,43 @@ import ValidationError from "../domain/errors/validation-error";
 import Order from "../infrastructure/schema/Order";
 import NotFoundError from "../domain/errors/not-found-error";
 import Address from "../infrastructure/schema/Address";
+import Inventory from "../infrastructure/schema/Inventory";
 import { CreateOrderDTO } from "../domain/dto/order";
 
 
-export const createOrder = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
+   
     const result = CreateOrderDTO.safeParse(req.body);
     if (!result.success) {
       throw new ValidationError("Invalid order data");
     }
 
- const userId = (req as any).auth.userId;
-    ;
+    const userId = (req as any).auth.userId;
 
+    
     const address = await Address.create({
       ...result.data.shippingAddress,
     });
 
-    await Order.create({
+    
+    for (const item of result.data.items) {
+      const inventory = await Inventory.findOne({ productId: item.product._id });
+      if (!inventory || inventory.quantity < item.quantity) {
+        throw new Error(`Insufficient stock for product ${item.product._id}`);
+      }
+      inventory.quantity -= item.quantity;
+      await inventory.save();
+    }
+
+    
+    const order = new Order({
       userId,
-      items: result.data.items,
       addressId: address._id,
+      items: result.data.items,
+      paymentStatus: "PENDING",
     });
+    await order.save();
 
     res.status(201).send();
   } catch (error) {
