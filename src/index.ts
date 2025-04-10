@@ -9,6 +9,8 @@ import cors from "cors";
 import { orderRouter } from "./api/order";
 import { paymentsRouter } from './api/payment';
 import {inventoryRouter} from './api/inventory';
+import { handleWebhook } from "./application/payment";
+import bodyParser from "body-parser";
 //console.log("Clerk Publishable Key:", process.env.CLERK_PUBLISHABLE_KEY);
 //console.log("Clerk API Key:", process.env.CLERK_SECRET_KEY);
 const app = express();
@@ -23,8 +25,17 @@ app.use(express.json()); // For parsing JSON requests*
 // });
 
 //app.use(cors({ origin: "https://fed-storefront-frontend-rushdha.netlify.app"}));
-app.use(cors({ origin: "http://localhost:5173"}));
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(clerkMiddleware())
+
+app.post(
+    "/api/stripe/webhook",
+    bodyParser.raw({ type: "application/json" }),
+    handleWebhook
+  );
+
+app.use(express.json()); 
+
 app.use('/api/products',productRouter) // base routes and all the requests associated with it
 app.use('/api/categories',categoryRouter);
 app.use("/api/orders", orderRouter);

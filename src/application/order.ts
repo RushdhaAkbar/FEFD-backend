@@ -6,7 +6,7 @@ import NotFoundError from "../domain/errors/not-found-error";
 import Address from "../infrastructure/schema/Address";
 import Inventory from "../infrastructure/schema/Inventory";
 import { CreateOrderDTO } from "../domain/dto/order";
-
+import Product from "../infrastructure/schema/Product";
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,6 +23,17 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       ...result.data.shippingAddress,
     });
 
+    const items = await Promise.all(
+      result.data.items.map(async (item) => {
+        const product = await Product.findById(item.product._id);
+        console.log(product);
+
+        return {
+          ...item,
+          product: { ...item.product, stripePriceId: product?.stripePriceId },
+        };
+      })
+    );
     
     for (const item of result.data.items) {
       const inventory = await Inventory.findOne({ productId: item.product._id });
@@ -34,15 +45,13 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     }
 
     
-    const order = new Order({
+    const order = await Order.create({
       userId,
+      items,
       addressId: address._id,
-      items: result.data.items,
-      paymentStatus: "PENDING",
     });
-    await order.save();
 
-    res.status(201).send();
+    res.status(201).json({ orderId: order._id });
   } catch (error) {
     next(error);
   }
