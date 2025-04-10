@@ -34,7 +34,7 @@ app.post(
     handleWebhook
   );
 
-app.use(express.json()); 
+
 
 app.use('/api/products',productRouter) // base routes and all the requests associated with it
 app.use('/api/categories',categoryRouter);
