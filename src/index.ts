@@ -17,7 +17,7 @@ const app = express();
 
 
 
-app.use(express.json()); // For parsing JSON requests*
+ // For parsing JSON requests*
 // app.use((req, res, next) => {
 //   console.log("Recieved a Request");
 //   console.log(req.method, req.url);
@@ -35,7 +35,7 @@ app.post(
   );
 
 
-
+app.use(express.json());
 app.use('/api/products',productRouter) // base routes and all the requests associated with it
 app.use('/api/categories',categoryRouter);
 app.use("/api/orders", orderRouter);
