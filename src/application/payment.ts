@@ -4,7 +4,7 @@ import Order from "../infrastructure/schema/Order";
 import stripe from "../infrastructure/stripe";
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
-console.log(endpointSecret);
+//console.log(endpointSecret);
 const FRONTEND_URL = process.env.FRONTEND_URL as string;
 
 async function fulfillCheckout(sessionId: string) {
@@ -71,6 +71,8 @@ export const handleWebhook = async (req: Request, res: Response) => {
       return;
     }
   } catch (err) {
+    // @ts-ignore
+    console.log(err.stack);
     // @ts-ignore
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
