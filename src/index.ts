@@ -10,7 +10,7 @@ import { orderRouter } from "./api/order";
 import { paymentsRouter } from './api/payment';
 import {inventoryRouter} from './api/inventory';
 import { handleWebhook } from "./application/payment";
-import bodyParser from "body-parser";
+import bodyParser from 'body-parser';
 //console.log("Clerk Publishable Key:", process.env.CLERK_PUBLISHABLE_KEY);
 //console.log("Clerk API Key:", process.env.CLERK_SECRET_KEY);
 const app = express();
