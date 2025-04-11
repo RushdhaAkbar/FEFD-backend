@@ -18,11 +18,11 @@ const app = express();
 
 
  // For parsing JSON requests*
-app.use((req, res, next) => {
-  console.log("Recieved a Request");
-  console.log(req.method, req.url);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("Recieved a Request");
+//   console.log(req.method, req.url);
+//   next();
+// });
 
 //app.use(cors({ origin: "https://fed-storefront-frontend-rushdha.netlify.app"}));
 app.use(cors({ origin: process.env.FRONTEND_URL }));

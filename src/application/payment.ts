@@ -54,7 +54,7 @@ async function fulfillCheckout(sessionId: string) {
 
 export const handleWebhook = async (req: Request, res: Response) => {
   const payload = req.body;
-  console.log(payload);
+  //console.log(payload);
   const sig = req.headers["stripe-signature"] as string;
 
   let event;
