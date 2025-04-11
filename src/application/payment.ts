@@ -52,26 +52,39 @@ async function fulfillCheckout(sessionId: string) {
 }
 
 export const handleWebhook = async (req: Request, res: Response) => {
-  const payload = req.body;
   const sig = req.headers["stripe-signature"] as string;
 
-  let event;
-
   try {
-    event = stripe.webhooks.constructEvent(payload, sig, endpointSecret);
+    // Check the raw buffer type
+    console.log("Raw body type:", typeof req.body); // should be object (because it's a Buffer)
+    console.log("Is Buffer:", Buffer.isBuffer(req.body)); // should be true
+    console.log("Raw body as string:", req.body.toString("utf8")); // readable payload
+
+    const event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      endpointSecret
+    );
+
+    // Log the event object
+    console.log("Stripe Event:", event.type);
+    console.log("Event ID:", event.id);
+    console.log("Event data:", event.data);
+
+    // Handle specific events
     if (
       event.type === "checkout.session.completed" ||
       event.type === "checkout.session.async_payment_succeeded"
     ) {
       await fulfillCheckout(event.data.object.id);
-
       res.status(200).send();
       return;
     }
+
+    res.status(200).end(); // acknowledge unhandled event types
   } catch (err) {
-    // @ts-ignore
-    res.status(400).send(`Webhook Error: ${err.message}`);
-    return;
+    console.error("Webhook Error:", err);
+    res.status(400).send(`Webhook Error: ${(err as any).message}`);
   }
 };
 
