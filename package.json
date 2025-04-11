@@ -6,7 +6,7 @@
   "dev": "nodemon src/index.ts",
  
    
-  "build": "npm install",
+  "build": "npm install && tsc",
  
    
   "start": "node ./dist/index.js"
