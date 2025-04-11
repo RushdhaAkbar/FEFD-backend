@@ -71,8 +71,7 @@ export const handleWebhook = async (req: Request, res: Response) => {
       return;
     }
   } catch (err) {
-    // @ts-ignore
-    console.log(err.stack);
+        console.log(err);
     // @ts-ignore
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
