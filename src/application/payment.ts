@@ -41,7 +41,7 @@ async function fulfillCheckout(sessionId: string) {
 
   // Check the Checkout Session's payment_status property
   // to determine if fulfillment should be peformed
-  if (checkoutSession.payment_status == "unpaid") {
+  if (checkoutSession.payment_status !== "unpaid") {
     // TODO: Perform fulfillment of the line items
     // TODO: Record/save fulfillment status for this
     // Checkout Session
